@@ -1,24 +1,23 @@
 let sound, env, cVerb, fft;
 let currentIR = 0;
 let rawImpulse;
+let uImpulse = true;
 
 function preload() {
   // we have included both MP3 and OGG versions of all the impulses/sounds
   soundFormats('mp3', 'ogg');
-
   // create a p5.Convolver
   cVerb = createConvolver('assets/bx-spring');
   cVerb.addImpulse('assets/small-plate');
   cVerb.addImpulse('assets/concrete-tunnel');
-
   // load a sound that will be processed by the p5.ConvultionReverb
   sound = loadSound('assets/main-sound');
+  soloSound = loadSound('assets/main-sound');
 }
 
 function setup() {
   createCanvas(900, 500);
   rawImpulse = loadSound('assets/' + cVerb.impulses[currentIR].name);
-
   // disconnect from master output...
   sound.disconnect();
   // ... and process with cVerb
@@ -31,9 +30,15 @@ function setup() {
 function draw() {
   background(30);
   
-	textSize(20);
+  if(uImpulse){
+  	textSize(20);
 	text('Current Impulse Response: ' + cVerb.impulses[currentIR].name, 400, 30);
 	fill(255);
+  } else {
+  	textSize(20);
+	text('Original sound playing only', 400, 30);
+	fill(255);
+  }
   
   let spectrum = fft.analyze();
   // Draw every value in the frequencySpectrum array as a rectangle
@@ -56,14 +61,33 @@ function mousePressed() {
 
   // play the sound through the impulse
   sound.play();
+  sound.setVolume(1);
+  //Play main sound separately muted for comparison later
+  soloSound.play();
+  soloSound.setVolume(0);
 
-  // display the current Impulse Response name (the filepath)
-  println('Convolution Impulse Response: ' + cVerb.impulses[currentIR].name);
-
+  console.log('Convolution Impulse Response: ' + cVerb.impulses[currentIR].name);
   rawImpulse.setPath('assets/' + cVerb.impulses[currentIR].name);
 }
 
-// play the impulse (without convolution)
 function keyPressed() {
-  rawImpulse.play();
+	
+	//tap 'space' to hear just impulse response
+	if (keyCode === 32) {
+		rawImpulse.play();
+	}
+	
+	//tap 'o' to toggle between original sound and original sound with the convolution.
+	if (keyCode === 79) {
+		if(uImpulse) {
+			uImpulse = false;
+			sound.setVolume(0);
+			soloSound.setVolume(1);
+		} else if (!uImpulse) {
+			uImpulse = true;
+			soloSound.setVolume(0);
+			sound.setVolume(1);
+		}
+
+	}
 }
