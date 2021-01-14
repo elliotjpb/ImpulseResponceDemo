@@ -30,6 +30,14 @@ function setup() {
 function draw() {
   background(30);
   
+  	textSize(11);
+	text('Press the mouse to get started, and change between the Impulse responses', 400, 60);
+	fill(255);
+	text('Tap the Space Bar to hear the current Impulse response', 400, 80);
+	fill(255);
+	text('Tap the \'o\' key to toggle between the original sound and original sound with the convolution.', 400, 100);
+	fill(255);
+  
   if(uImpulse){
   	textSize(20);
 	text('Current Impulse Response: ' + cVerb.impulses[currentIR].name, 400, 30);
