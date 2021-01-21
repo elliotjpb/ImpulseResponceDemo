@@ -5,11 +5,13 @@ let uImpulse = true;
 
 function preload() {
   // we have included both MP3 and OGG versions of all the impulses/sounds
-  soundFormats('mp3', 'ogg');
+  soundFormats('mp3', 'wav');
   // create a p5.Convolver
-  cVerb = createConvolver('assets/bx-spring');
-  cVerb.addImpulse('assets/small-plate');
+  cVerb = createConvolver('assets/small-plate');
+  cVerb.addImpulse('assets/slinky.wav');
   cVerb.addImpulse('assets/concrete-tunnel');
+  cVerb.addImpulse('assets/turbine-hall.wav');
+  cVerb.addImpulse('assets/york-minster.wav');
   // load a sound that will be processed by the p5.ConvultionReverb
   sound = loadSound('assets/main-sound');
   soloSound = loadSound('assets/main-sound');
@@ -57,10 +59,16 @@ function draw() {
     rect(x, height, (width/2) / spectrum.length, h);
   }
   
+  
 }
 
 function mousePressed() {
-  // cycle through the array of cVerb.impulses
+
+if(uImpulse) {
+
+sound.stop();
+soloSound.stop();
+// cycle through the array of cVerb.impulses
   currentIR++;
   if (currentIR >= cVerb.impulses.length) {
     currentIR = 0;
@@ -76,6 +84,8 @@ function mousePressed() {
 
   console.log('Convolution Impulse Response: ' + cVerb.impulses[currentIR].name);
   rawImpulse.setPath('assets/' + cVerb.impulses[currentIR].name);
+	}
+  
 }
 
 function keyPressed() {
@@ -88,13 +98,13 @@ function keyPressed() {
 	//tap 'o' to toggle between original sound and original sound with the convolution.
 	if (keyCode === 79) {
 		if(uImpulse) {
-			uImpulse = false;
 			sound.setVolume(0);
 			soloSound.setVolume(1);
+			uImpulse = false;
 		} else if (!uImpulse) {
-			uImpulse = true;
 			soloSound.setVolume(0);
 			sound.setVolume(1);
+			uImpulse = true;
 		}
 
 	}
