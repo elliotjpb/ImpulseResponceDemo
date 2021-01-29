@@ -1,3 +1,4 @@
 # Don't track folders:
 
 #assets/
+.DS_Store
