@@ -4,17 +4,20 @@ let rawImpulse;
 let uImpulse = true;
 
 function preload() {
-  // we have included both MP3 and OGG versions of all the impulses/sounds
-  soundFormats('mp3', 'wav');
+  soundFormats('wav');
+  
   // create a p5.Convolver
-  cVerb = createConvolver('assets/small-plate');
-  cVerb.addImpulse('assets/slinky.wav');
-  cVerb.addImpulse('assets/concrete-tunnel');
+  cVerb = createConvolver('assets/slinky.wav');
+  
+  //adding impulses 
+  cVerb.addImpulse('assets/small-plate.wav');
+  cVerb.addImpulse('assets/concrete-tunnel.wav');
   cVerb.addImpulse('assets/turbine-hall.wav');
   cVerb.addImpulse('assets/york-minster.wav');
-  // load a sound that will be processed by the p5.ConvultionReverb
-  sound = loadSound('assets/main-sound');
-  soloSound = loadSound('assets/main-sound');
+  
+  // Sound that will be processed and a duplicate for comparison.
+  sound = loadSound('assets/main-sound.wav');
+  soloSound = loadSound('assets/main-sound.wav');
 }
 
 function setup() {
@@ -22,7 +25,7 @@ function setup() {
   rawImpulse = loadSound('assets/' + cVerb.impulses[currentIR].name);
   // disconnect from master output...
   sound.disconnect();
-  // ... and process with cVerb
+  // ... and process with convolution
   // so that we only hear the reverb
   cVerb.process(sound);
 
@@ -58,8 +61,6 @@ function draw() {
     let h = -height + map(spectrum[i], 0, 255, height, 0);
     rect(x, height, (width/2) / spectrum.length, h);
   }
-  
-  
 }
 
 function mousePressed() {
@@ -74,7 +75,6 @@ soloSound.stop();
     currentIR = 0;
   }
   cVerb.toggleImpulse(currentIR);
-
   // play the sound through the impulse
   sound.play();
   sound.setVolume(1);
