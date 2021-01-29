@@ -1,7 +1,7 @@
 let sound, env, cVerb, fft;
 let currentIR = 0;
 let rawImpulse;
-let uImpulse = true;
+let usingImpulse = false;
 
 function preload() {
   soundFormats('wav');
@@ -43,11 +43,11 @@ function draw() {
 	text('Tap the \'o\' key to toggle between the original sound and original sound with the convolution.', 400, 100);
 	fill(255);
   
-  if(uImpulse){
+  if(usingImpulse){
   	textSize(20);
 	text('Current Impulse Response: ' + cVerb.impulses[currentIR].name, 400, 30);
 	fill(255);
-  } else {
+  } else if(!usingImpulse) {
   	textSize(20);
 	text('Original sound playing only', 400, 30);
 	fill(255);
@@ -65,11 +65,21 @@ function draw() {
 
 function mousePressed() {
 
-if(uImpulse) {
+if(!usingImpulse) {
+	
+	sound.stop();
+	soloSound.stop();
+	
+	sound.play();
+    sound.setVolume(0);
+    //Play main sound separately muted for comparison later
+    soloSound.play();
+    soloSound.setVolume(1);
+} else if (usingImpulse){
 
-sound.stop();
-soloSound.stop();
-// cycle through the array of cVerb.impulses
+	sound.stop();
+	soloSound.stop();
+	// cycle through the array of cVerb.impulses
   currentIR++;
   if (currentIR >= cVerb.impulses.length) {
     currentIR = 0;
@@ -84,7 +94,7 @@ soloSound.stop();
 
   console.log('Convolution Impulse Response: ' + cVerb.impulses[currentIR].name);
   rawImpulse.setPath('assets/' + cVerb.impulses[currentIR].name);
-	}
+}
   
 }
 
@@ -97,14 +107,14 @@ function keyPressed() {
 	
 	//tap 'o' to toggle between original sound and original sound with the convolution.
 	if (keyCode === 79) {
-		if(uImpulse) {
+		if(usingImpulse) {
 			sound.setVolume(0);
 			soloSound.setVolume(1);
-			uImpulse = false;
-		} else if (!uImpulse) {
+			usingImpulse = false;
+		} else if (!usingImpulse) {
 			soloSound.setVolume(0);
 			sound.setVolume(1);
-			uImpulse = true;
+			usingImpulse = true;
 		}
 
 	}
