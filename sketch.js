@@ -12,7 +12,7 @@ function preload() {
   //adding impulses 
   cVerb.addImpulse('assets/small-plate.wav');
   cVerb.addImpulse('assets/concrete-tunnel.wav');
-  cVerb.addImpulse('assets/turbine-hall.wav');
+  cVerb.addImpulse('assets/nuclear-reactor-hall.wav');
   cVerb.addImpulse('assets/york-minster.wav');
   
   // Sound that will be processed and a duplicate for comparison.
@@ -35,14 +35,14 @@ function setup() {
 function draw() {
   background(30);
   
-  	textSize(11);
-	text('Press the mouse to get started, and change between the Impulse responses', 400, 60);
+  	textSize(14);
+	text('Press the mouse to get started, and change between the Impulse responses.', 400, 60);
 	fill(255);
-	text('Tap the Space Bar to hear the current Impulse response', 400, 80);
+	text('Tap the Space Bar to hear the current Impulse response.', 400, 90);
 	fill(255);
-	text('Tap the \'o\' key to toggle between the original sound and original sound with the convolution.', 400, 100);
+	text('Tap the \'o\' key to toggle between the original sound and original sound with \nthe convolution.', 400, 120);
 	fill(255);
-  
+	
   if(usingImpulse){
   	textSize(20);
 	text('Current Impulse Response: ' + cVerb.impulses[currentIR].name, 400, 30);
@@ -64,6 +64,8 @@ function draw() {
 }
 
 function mousePressed() {
+
+if(mouseX < 900 && mouseY < 500) {
 
 if(!usingImpulse) {
 	
@@ -94,8 +96,9 @@ if(!usingImpulse) {
 
   console.log('Convolution Impulse Response: ' + cVerb.impulses[currentIR].name);
   rawImpulse.setPath('assets/' + cVerb.impulses[currentIR].name);
-}
   
+		}
+	}
 }
 
 function keyPressed() {
